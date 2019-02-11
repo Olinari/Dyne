@@ -20,26 +20,15 @@ const dishSchema = new Schema({
 	description: String,
 	price: Schema.Types.Decimal128,
 	currency: {
-		type: String,
-		enum: ['ILS', 'USD', 'EUR', 'GBP']
+		type: Schema.Types.ObjectId,
+		ref: 'Currency',
+		require: true
 	},
 	calories: Number,
 	popular_name: {
-		type: String,
-		enum: [
-			'Not Relevant',
-			'Pizza',
-			'Hamburger',
-			'Noodles',
-			'Sushi',
-			'Dessert',
-			'Pasta',
-			'Fish',
-			'Seafood',
-			'Steak',
-			'Sandwich',
-			'Salad'
-		]
+		type: Schema.Types.ObjectId,
+		ref: 'PopularDish',
+		required: true
 	},
 	vegan: Boolean,
 	vegetarian: Boolean,

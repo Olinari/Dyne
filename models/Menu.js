@@ -19,20 +19,20 @@ const menuSchema = new Schema({
 		}
 	],
 	opening_hours: {
-		Monday: String,
-		Tuesday: String,
-		Wednesday: String,
-		Thursday: String,
-		Friday: String,
-		Sunday: String
+		Monday: [],
+		Tuesday: [],
+		Wednesday: [],
+		Thursday: [],
+		Friday: [],
+		Sunday: []
 	},
 	closing_hours: {
-		Monday: String,
-		Tuesday: String,
-		Wednesday: String,
-		Thursday: String,
-		Friday: String,
-		Sunday: String
+		Monday: [],
+		Tuesday: [],
+		Wednesday: [],
+		Thursday: [],
+		Friday: [],
+		Sunday: []
 	},
 	createdAt: {
 		type: Date,
