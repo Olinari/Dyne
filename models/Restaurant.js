@@ -18,6 +18,28 @@ const restaurantSchema = new Schema({
 		required: true,
 		enum: ['None', 'Kosher', 'Halal']
 	},
+	open_days: [
+		{
+			type: String,
+			enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+		}
+	],
+	opening_hours: {
+		Monday: [],
+		Tuesday: [],
+		Wednesday: [],
+		Thursday: [],
+		Friday: [],
+		Sunday: []
+	},
+	closing_hours: {
+		Monday: [],
+		Tuesday: [],
+		Wednesday: [],
+		Thursday: [],
+		Friday: [],
+		Sunday: []
+	},
 	createdAt: {
 		type: Date,
 		required: true
