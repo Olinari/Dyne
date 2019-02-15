@@ -1,17 +1,16 @@
 const mongoose = require('mongoose');
-const _ = require('lodash');
 const { Schema } = mongoose;
 
 const roleSchema = new Schema({
   name: String,
   createdAt: {
     type: Date,
-    required: true
+    required: true,
   },
   modifiedAt: {
     type: Date,
-    required: true
-  }
+    required: true,
+  },
 });
 
 class RolesClass {}

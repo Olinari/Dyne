@@ -1,23 +1,19 @@
 const mongoose = require('mongoose');
-const _ = require('lodash');
 const { Schema } = mongoose;
 
 const cuisineSchema = new Schema({
-	name: String,
-	createdAt: {
-		type: Date,
-		required: true
-	},
-	modifiedAt: {
-		type: Date,
-		required: true
-	}
+  name: String,
+  createdAt: {
+    type: Date,
+    required: true,
+  },
+  modifiedAt: {
+    type: Date,
+    required: true,
+  },
 });
 
-class CuisineClass {
-
-
-}
+class CuisineClass {}
 
 cuisineSchema.loadClass(CuisineClass);
 
