@@ -40,6 +40,11 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+  social_meta: {
+    type: Map,
+    of: String,
+    required: false,
+  },
   createdAt: {
     type: Date,
     required: true,
@@ -51,8 +56,18 @@ const userSchema = new Schema({
 });
 
 class UsersClass {
-  static signUp(firstName, lastName, email, password, role, status, signUpFrom, providerId = null) {
-    return this.create({
+  static async signUp(
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
+    status,
+    signUpFrom,
+    providerId = null,
+    socialMeta = null
+  ) {
+    return await this.create({
       first_name: firstName,
       last_name: lastName,
       email: email,
@@ -62,6 +77,7 @@ class UsersClass {
       sign_up_from: signUpFrom,
       last_logged_in: '',
       provider_id: providerId,
+      social_meta: socialMeta,
       createdAt: new Date(),
       modifiedAt: new Date(),
     });

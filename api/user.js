@@ -7,7 +7,7 @@ const UserTokens = require('../models/UserTokens');
 const Common = require('../misc/common');
 const Email = require('../misc/email');
 
-const signUpNewUser = async function(userData, suppressAlreadyExists = false) {
+const registerNewUser = async function(userData, suppressAlreadyExists = false) {
   const firstName = userData.firstName;
   const lastName = userData.lastName;
   const email = userData.email;
@@ -16,9 +16,9 @@ const signUpNewUser = async function(userData, suppressAlreadyExists = false) {
   const signUpFrom = userData.signUpWith || 'Self';
   const providerId = userData.providerId || '';
   const roleName = userData.role || 'Regular User';
-  let user = await Users.findOne({ email: email }, '_id');
+  const socialMeta = userData.socialMeta || '';
+  let user = await Users.findOne({ email: email });
   let passwordError = await Common.checkPassword(userData.password, userData.confirmPassword);
-  console.log('user already', user);
   if (!user) {
     if (!passwordError) {
       const role = await Roles.findOne({ name: roleName }, '_id');
@@ -30,15 +30,15 @@ const signUpNewUser = async function(userData, suppressAlreadyExists = false) {
         role._id,
         status,
         signUpFrom,
-        providerId
+        providerId,
+        socialMeta
       );
     } else {
       throw new Error(passwordError);
     }
-  } else if (!suppressAlreadyExists) {
+  } else if (suppressAlreadyExists) {
     throw new Error('User Already Exists');
   }
-
   return user;
 };
 
@@ -98,7 +98,7 @@ router.post('/sign-up', async function(req, res, next) {
   const userData = req.body;
   let result = {};
   try {
-    let user = await signUpNewUser(userData);
+    let user = await registerNewUser(userData);
     if (user) {
       await Users.updateOne({ _id: user._id }, { last_logged_in: new Date() });
       user.roleName = userData.role || 'Regular User';
@@ -151,19 +151,39 @@ router.post('/sign-in', async function(req, res, next) {
     next(error);
   }
 });
-// router.post('/social-sign-up', function(req, res) {
-//   const userData = req.body;
-//   let result = {};
-//   try {
-//     userData.password = +new Date(); //random password for social login
-//     let user = signUpNewUser(userData, true);
-//     if (user) {
-//     }
-//     return res.json(result);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+
+router.post('/social-sign-up', async function(req, res, next) {
+  const userData = req.body;
+  let result = {};
+  let tokenExpires = Date.now() + 24 * 3600000;
+  try {
+    let user = await registerNewUser(userData, false);
+    console.log('return user', user);
+    if (user) {
+      console.log('added user', user);
+      if (!user.roleName) {
+        const roleName = await Roles.findOne({ _id: user.role });
+        user.roleName = roleName.name;
+      }
+      let token = await jwt.genJWTToken(user);
+      //        await sendVerifyEmail(req, user._id, user.email);
+      result = {
+        status: 'ok',
+        info: 'Logged in successfully!',
+        data: {
+          token: token,
+        },
+      };
+      await UserTokens.insertToken(user._id, 'login-token', token, tokenExpires);
+      await Users.updateOne({ _id: user._id }, { last_logged_in: new Date() });
+      return res.json(result);
+    } else {
+      result = { status: 'error', data: null, info: 'User not created!' };
+    }
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.get('/get-all-users', async function(req, res, next) {
   let users = null;
