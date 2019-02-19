@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('./jwt_token');
+const jwt = require('../misc/jwt_token');
 const Users = require('../models/Users');
 const Roles = require('../models/Roles');
 const UserTokens = require('../models/UserTokens');
-const Common = require('./common');
+const Common = require('../misc/common');
+const Email = require('../misc/email');
 
 const signUpNewUser = async function(userData, suppressAlreadyExists = false) {
-  //console.log('user data', userData);
   const firstName = userData.firstName;
   const lastName = userData.lastName;
   const email = userData.email;
@@ -17,7 +17,7 @@ const signUpNewUser = async function(userData, suppressAlreadyExists = false) {
   const providerId = userData.providerId || '';
   const roleName = userData.role || 'Regular User';
   let user = await Users.findOne({ email: email }, '_id');
-  let passwordError = await checkPassword(userData.password, userData.confirmPassword);
+  let passwordError = await Common.checkPassword(userData.password, userData.confirmPassword);
   console.log('user already', user);
   if (!user) {
     if (!passwordError) {
@@ -59,39 +59,39 @@ const signInUser = async function(userData) {
   }
 };
 
-const checkPassword = async function(password, confirmPassword) {
-  let passwordError = null;
-  if (password != confirmPassword) {
-    passwordError = 'Password and Confirm password must be the same';
-  } else if (password.length < 7) {
-    passwordError = 'Password must be 8 character long';
+const sendVerifyEmail = async function(req, userId, email) {
+  let verifyEmailToken = await Common.hashPassword(email);
+  let verifyEmailTokenExpire = new Date().setFullYear(new Date().getFullYear() + 1);
+  let tokenInsert = await UserTokens.insertToken(
+    userId,
+    'verify-email-token',
+    verifyEmailToken,
+    verifyEmailTokenExpire
+  );
+  if (tokenInsert) {
+    const from = 'piyush.sharma@mind2minds.com';
+    const to = email;
+    const subject = 'Testing verify sing-up';
+    const text =
+      'Please click on the following link, or paste this into your browser to verify your email:\n\n' +
+      'http://' +
+      req.headers.host +
+      '/api/public/verify-email/' +
+      verifyEmailToken +
+      '\n\n';
+    const emailSend = await Email.sendEmail(from, to, subject, text, null);
+    if (emailSend.messageId) {
+      return emailSend;
+    } else {
+      throw new Error('Sending email Failed');
+    }
+  } else {
+    throw new Error('Saving token to db failed');
   }
-  return passwordError;
 };
-
-// const sendVerifyEmail = async function(email) {
-//   console.log('Welcome ', email);
-// };
 
 const getUsers = async function() {
   return await Users.find();
-};
-
-const resetUserPassword = async function(data, userId) {
-  let password = await Common.hashPassword(data.password);
-  let passwordError = await checkPassword(data.password, data.confirmPassword);
-  console.log('user id', userId);
-  if (!passwordError) {
-    let user = await Users.updateOne({ _id: userId }, { password: password });
-    console.log('reset user', user);
-    if (user) {
-      return user;
-    } else {
-      throw new Error('Password not updated');
-    }
-  } else {
-    throw new Error(passwordError);
-  }
 };
 
 router.post('/sign-up', async function(req, res, next) {
@@ -104,7 +104,7 @@ router.post('/sign-up', async function(req, res, next) {
       user.roleName = userData.role || 'Regular User';
       let token = jwt.genJWTToken(user);
       let tokenExpires = Date.now() + 24 * 3600000;
-      //let updatedStatus = await sendVerifyEmail(user.email);
+      await sendVerifyEmail(req, user._id, user.email);
       result = {
         status: 'ok',
         info: 'User successfully created!',
@@ -198,13 +198,26 @@ router.post('/forget-password', async function(req, res, next) {
         resetPasswordToken,
         resetPasswordExpires
       );
-      result = {
-        status: 'ok',
-        info: 'reset password link',
-        data: {
-          link: 'http://' + req.headers.host + '/api/user/reset-password/' + resetPasswordToken,
-        },
-      };
+      const from = 'piyush.sharma@mind2minds.com';
+      const to = data.email;
+      const subject = 'Testing reset password';
+      const text =
+        'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+        'http://' +
+        req.headers.host +
+        '/api/public/reset-password/' +
+        resetPasswordToken +
+        '\n\n' +
+        'If you did not request this, please ignore this email and your password will remain unchanged.\n';
+      const emailSend = await Email.sendEmail(from, to, subject, text, null);
+      if (emailSend.messageId) {
+        result = {
+          status: 'ok',
+          info: `To reset password a link is send to your email ${to} `,
+          data: {},
+        };
+      }
     } else {
       result = {
         status: 'error',
@@ -217,39 +230,4 @@ router.post('/forget-password', async function(req, res, next) {
   }
 });
 
-router.post('/reset-password/:userToken', async function(req, res, next) {
-  let token = req.params.userToken;
-  let result = {};
-  try {
-    let checkValidToken = await UserTokens.findOne({
-      token: token,
-      expire_date: { $gt: Date.now() },
-    });
-    console.log('valid token', checkValidToken);
-    if (checkValidToken) {
-      let resetUser = await resetUserPassword(req.body, checkValidToken.user_id);
-      if (resetUser) {
-        await UserTokens.deleteOne({ _id: checkValidToken._id });
-        result = {
-          status: 'ok',
-          info: 'Success! Your password has been changed.',
-          data: {},
-        };
-      } else {
-        result = {
-          status: 'error',
-          error: 'Password updating failed.',
-        };
-      }
-    } else {
-      result = {
-        status: 'error',
-        error: 'Password reset token is invalid or has expired.',
-      };
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-});
 module.exports = router;
