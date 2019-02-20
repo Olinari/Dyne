@@ -98,7 +98,7 @@ router.post('/sign-up', async function(req, res, next) {
   const userData = req.body;
   let result = {};
   try {
-    let user = await registerNewUser(userData);
+    let user = await registerNewUser(userData, true);
     if (user) {
       await Users.updateOne({ _id: user._id }, { last_logged_in: new Date() });
       user.roleName = userData.role || 'Regular User';

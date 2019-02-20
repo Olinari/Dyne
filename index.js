@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-
+const cors = require('cors');
 const mongoose = require('mongoose');
 
 const options = {
@@ -19,6 +19,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 // app.use('/api', Api);
+app.use(cors());
+app.options('*', cors());
 Api(app);
 
 const port = 8282;
