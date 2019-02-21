@@ -116,6 +116,7 @@ router.post('/sign-up', async function(req, res, next) {
     } else {
       result = { status: 'error', data: null, info: 'User not created!' };
     }
+    //console.log('sing up result', result);
     return res.json(result);
   } catch (error) {
     next(error);

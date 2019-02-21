@@ -36,6 +36,7 @@
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-prettier": "^3.0.1",
     "express": "^4.16.4",
+    "handlebars": "^4.1.0",
     "jsonwebtoken": "^8.4.0",
     "md5": "^2.2.1",
     "mongoose": "^5.4.10",

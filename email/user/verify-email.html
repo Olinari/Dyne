@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <link rel="styleSheet" href="./css/style.css"/>
+    </head>
+    <body>
+        <div class="email-container">
+            <div class="email-content">
+                <div class="email-header">
+                    <img src="http://localhost:3001/static/imgs/logo.png"/>
+                </div>
+                <div class="email-body">
+                    <div class="email-heading">
+                        <h1>{{emailHeading}}</h1>
+                    </div>
+                    <hr class="heading-bar" />
+                    <div class="heading-desc">
+                        <h3>{{headingDesc}}</h3>
+                    </div>
+                    <div class="body-desc">
+                        <p>{{bodyDesc}}</p>
+                    </div>
+                    <div class="email-button">
+                        <a href="{{buttonHref}}"><button class="btn btn-red">{{buttonText}}</button></a>
+                    </div>
+                    <div class="verify-link">
+                        <p>{{verifyText}}</p>
+                        <a href="{{verifyHref}}">{{verifyLinkText}}</a>
+                    </div>
+                </div>
+                <div class="forget-password-desc">
+                    <p>{{forgotPasswordDesc}}</p>
+                </div>
+                <div class="email-footer">
+                    <p>Sent by<a href="footerHref">Dishin</a> Israel, Kfar Shmaryahu, Derech HaSadot, 18</p>
+                </div>
+            </div>
+        </div>
+    <body>
+</html>
