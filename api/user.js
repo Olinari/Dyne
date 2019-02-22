@@ -59,7 +59,7 @@ const signInUser = async function(userData) {
   }
 };
 
-const sendVerifyEmail = async function(req, userId, email) {
+const sendVerifyEmail = async function(req, userId, email, name = null) {
   let verifyEmailToken = await Common.hashPassword(email);
   let verifyEmailTokenExpire = new Date().setFullYear(new Date().getFullYear() + 1);
   let tokenInsert = await UserTokens.insertToken(
@@ -72,19 +72,22 @@ const sendVerifyEmail = async function(req, userId, email) {
     const from = 'piyush.sharma@mind2minds.com';
     const to = email;
     const subject = 'Testing verify sing-up';
-    const text =
-      'Please click on the following link, or paste this into your browser to verify your email:\n\n' +
-      'http://' +
-      req.headers.host +
-      '/api/public/verify-email/' +
-      verifyEmailToken +
-      '\n\n';
-    const emailSend = await Email.sendEmail(from, to, subject, text, null);
-    if (emailSend.messageId) {
-      return emailSend;
-    } else {
-      throw new Error('Sending email Failed');
-    }
+    const replacements = {
+      emailHeading: 'Welcome to Dishin',
+      headingDesc: 'Just one more step..',
+      name: name,
+      bodyFirstPrah: ' before you go out and eat something new, please verify your email address.',
+      bodySecondPrah:
+        'If you did not create a Dishin account using this address, please contact us at support@dishin.com.',
+      buttonHref: 'http://' + req.headers.host + '/api/public/verify-email/' + verifyEmailToken,
+      buttonText: 'Verify your account',
+      verifyText: 'Or verify using link:',
+      verifyHref: 'http://' + req.headers.host + '/api/public/verify-email/' + verifyEmailToken,
+      verifyLinkText: 'http://' + req.headers.host + '/api/public/verify-email/' + verifyEmailToken,
+    };
+    const emailSend = await Email.sendEmail(from, to, subject, replacements, null);
+    console.log('email send', emailSend);
+    return true;
   } else {
     throw new Error('Saving token to db failed');
   }
@@ -104,7 +107,7 @@ router.post('/sign-up', async function(req, res, next) {
       user.roleName = userData.role || 'Regular User';
       let token = jwt.genJWTToken(user);
       let tokenExpires = Date.now() + 24 * 3600000;
-      await sendVerifyEmail(req, user._id, user.email);
+      await sendVerifyEmail(req, user._id, user.email, user.firstName);
       result = {
         status: 'ok',
         info: 'User successfully created!',
@@ -205,6 +208,7 @@ router.get('/get-all-users', async function(req, res, next) {
 });
 
 router.post('/forget-password', async function(req, res, next) {
+  console.log('forget password data', req.body);
   let data = req.body;
   let result = {};
   let user = null;
@@ -222,17 +226,22 @@ router.post('/forget-password', async function(req, res, next) {
       const from = 'piyush.sharma@mind2minds.com';
       const to = data.email;
       const subject = 'Testing reset password';
-      const text =
-        'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-        'http://' +
-        req.headers.host +
-        '/api/public/reset-password/' +
-        resetPasswordToken +
-        '\n\n' +
-        'If you did not request this, please ignore this email and your password will remain unchanged.\n';
-      const emailSend = await Email.sendEmail(from, to, subject, text, null);
-      if (emailSend.messageId) {
+      const replacements = {
+        emailHeading: 'Forgot your password',
+        headingDesc: '',
+        name: user.firstName,
+        bodyFirstPrah: ' we got a request to reset your Dishin password.',
+        bodySecondPrah: '',
+        buttonHref: 'http://localhost:3001/reset-password/' + resetPasswordToken,
+        buttonText: 'Reset your password',
+        verifyText: '',
+        verifyHref: '',
+        verifyLinkText: '',
+        forgotPasswordDesc: `If you ignore this message, your password won't be changed, if your don't request a password reset.tellus`,
+      };
+      const emailSend = await Email.sendEmail(from, to, subject, replacements);
+      console.log('email send', emailSend);
+      if (emailSend) {
         result = {
           status: 'ok',
           info: `To reset password a link is send to your email ${to} `,

@@ -95,4 +95,31 @@ router.post('/reset-password/:userToken', async function(req, res, next) {
   }
 });
 
+router.get('/check-reset-token/:userToken', async function(req, res, next) {
+  let token = req.params.userToken;
+  let result = {};
+  console.log('check token', token);
+  try {
+    let checkValidToken = await UserTokens.findOne({
+      token: token,
+      expire_date: { $gt: Date.now() },
+    });
+    if (checkValidToken) {
+      result = {
+        status: 'ok',
+        info: 'valid token',
+        isTokenValid: true,
+      };
+    } else {
+      result = {
+        status: 'ok',
+        info: 'Token is invalid or has expired.',
+        isTokenValid: false,
+      };
+    }
+    return res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = router;
