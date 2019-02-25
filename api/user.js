@@ -8,37 +8,48 @@ const Common = require('../misc/common');
 const Email = require('../misc/email');
 
 const registerNewUser = async function(userData, suppressAlreadyExists = false) {
+  console.log('user data', userData);
   const firstName = userData.firstName;
   const lastName = userData.lastName;
   const email = userData.email;
   const password = await Common.hashPassword(userData.password);
   const status = userData.status || 'pending';
   const signUpFrom = userData.signUpWith || 'Self';
-  const providerId = userData.providerId || '';
+  const providerId = userData.providerId || +new Date();
   const roleName = userData.role || 'Regular User';
   const socialMeta = userData.socialMeta || '';
-  let user = await Users.findOne({ email: email });
-  let passwordError = await Common.checkPassword(userData.password, userData.confirmPassword);
+  let validateUserCondition = { email: email };
+  let user = await Users.findOne(validateUserCondition);
   if (!user) {
-    if (!passwordError) {
-      const role = await Roles.findOne({ name: roleName }, '_id');
-      user = await Users.signUp(
-        firstName,
-        lastName,
-        email,
-        password,
-        role._id,
-        status,
-        signUpFrom,
-        providerId,
-        socialMeta
-      );
-    } else {
-      throw new Error(passwordError);
-    }
+    const role = await Roles.findOne({ name: roleName }, '_id');
+    user = await Users.signUp(
+      firstName,
+      lastName,
+      email,
+      password,
+      role._id,
+      status,
+      signUpFrom,
+      providerId,
+      socialMeta
+    );
   } else if (suppressAlreadyExists) {
     throw new Error('User Already Exists');
+  } else {
+    if (signUpFrom != 'Self' && signUpFrom != user.sign_up_from) {
+      await Users.updateOne(
+        { email: email },
+        {
+          sign_up_from: signUpFrom,
+          provider_id: providerId,
+          social_meta: socialMeta,
+          modifiedAt: new Date(),
+        }
+      );
+      user = await Users.findOne({ email: email });
+    }
   }
+  console.log('updated user', user);
   return user;
 };
 
@@ -52,10 +63,10 @@ const signInUser = async function(userData) {
       await Users.updateOne({ _id: validUser._id }, { last_logged_in: new Date() });
       return validUser;
     } else {
-      throw new Error('Password not matched');
+      throw new Error('Invalid email or password!');
     }
   } else {
-    throw new Error('Incorrect email address');
+    throw new Error('Invalid email or password!');
   }
 };
 
@@ -101,26 +112,28 @@ router.post('/sign-up', async function(req, res, next) {
   const userData = req.body;
   let result = {};
   try {
-    let user = await registerNewUser(userData, true);
-    if (user) {
-      await Users.updateOne({ _id: user._id }, { last_logged_in: new Date() });
-      user.roleName = userData.role || 'Regular User';
-      let token = jwt.genJWTToken(user);
-      let tokenExpires = Date.now() + 24 * 3600000;
-      await sendVerifyEmail(req, user._id, user.email, user.firstName);
-      result = {
-        status: 'ok',
-        info: 'User successfully created!',
-        data: {
-          token: token,
-        },
-      };
-      await UserTokens.insertToken(user._id, 'login-token', token, tokenExpires);
+    let emailError = await Common.emailValidate(userData.email);
+    let passwordError = await Common.checkPassword(userData.password, userData.confirmPassword);
+    if (!emailError && !passwordError) {
+      let user = await registerNewUser(userData, true);
+      if (user) {
+        await Users.updateOne({ _id: user._id }, { last_logged_in: new Date() });
+        let token = jwt.genJWTToken(user);
+        await sendVerifyEmail(req, user._id, user.email, user.firstName);
+        result = {
+          status: 'ok',
+          info: 'User successfully created!',
+          data: {
+            token: token,
+          },
+        };
+      } else {
+        result = { status: 'error', data: null, info: 'User not created!' };
+      }
+      return res.json(result);
     } else {
-      result = { status: 'error', data: null, info: 'User not created!' };
+      result = { status: 'error', data: null, info: 'Invalid email or password!' };
     }
-    //console.log('sing up result', result);
-    return res.json(result);
   } catch (error) {
     next(error);
   }
@@ -156,33 +169,35 @@ router.post('/sign-in', async function(req, res, next) {
   }
 });
 
-router.post('/social-sign-up', async function(req, res, next) {
+router.post('/social-sign-in', async function(req, res, next) {
   const userData = req.body;
   let result = {};
-  let tokenExpires = Date.now() + 24 * 3600000;
   try {
-    let user = await registerNewUser(userData, false);
-    console.log('return user', user);
-    if (user) {
-      console.log('added user', user);
-      if (!user.roleName) {
-        const roleName = await Roles.findOne({ _id: user.role });
-        user.roleName = roleName.name;
+    let emailError = await Common.emailValidate(userData.email);
+    if (!emailError) {
+      let user = await registerNewUser(userData, false);
+      if (user) {
+        console.log('added user', user);
+        let token = await jwt.genJWTToken(user);
+        if (user.createdAt - user.modifiedAt === 0) {
+          console.log('send email', user._id, user.email, user.first_name);
+          await sendVerifyEmail(req, user._id, user.email, user.first_name);
+        }
+        result = {
+          status: 'ok',
+          info: 'Logged in successfully!',
+          data: {
+            token: token,
+          },
+        };
+        console.log('social result', result);
+        await Users.updateOne({ _id: user._id }, { last_logged_in: new Date() });
+        return res.json(result);
+      } else {
+        result = { status: 'error', data: null, info: 'User not created!' };
       }
-      let token = await jwt.genJWTToken(user);
-      //        await sendVerifyEmail(req, user._id, user.email);
-      result = {
-        status: 'ok',
-        info: 'Logged in successfully!',
-        data: {
-          token: token,
-        },
-      };
-      await UserTokens.insertToken(user._id, 'login-token', token, tokenExpires);
-      await Users.updateOne({ _id: user._id }, { last_logged_in: new Date() });
-      return res.json(result);
     } else {
-      result = { status: 'error', data: null, info: 'User not created!' };
+      result = { status: 'error', data: null, info: 'Invalid email or password!' };
     }
   } catch (err) {
     next(err);

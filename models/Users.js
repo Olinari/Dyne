@@ -67,7 +67,7 @@ class UsersClass {
     providerId = null,
     socialMeta = null
   ) {
-    return await this.create({
+    const obj = {
       first_name: firstName,
       last_name: lastName,
       email: email,
@@ -80,7 +80,9 @@ class UsersClass {
       social_meta: socialMeta,
       createdAt: new Date(),
       modifiedAt: new Date(),
-    });
+    };
+    console.log('new record', obj);
+    return await this.create(obj);
   }
 }
 

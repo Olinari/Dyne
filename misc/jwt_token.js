@@ -8,7 +8,7 @@ class JwtToken {
       user_id: user._id,
       role: user.role,
       roleId: user.roleId,
-      roleName: user.roleName,
+      // roleName: user.roleName,
       email: user.email,
       status: user.status,
       exp: new Date().getTime() + 31536000,
