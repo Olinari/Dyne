@@ -81,7 +81,6 @@ class UsersClass {
       createdAt: new Date(),
       modifiedAt: new Date(),
     };
-    console.log('new record', obj);
     return await this.create(obj);
   }
 }

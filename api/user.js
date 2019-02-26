@@ -8,7 +8,6 @@ const Common = require('../misc/common');
 const Email = require('../misc/email');
 
 const registerNewUser = async function(userData, suppressAlreadyExists = false) {
-  console.log('user data', userData);
   const firstName = userData.firstName;
   const lastName = userData.lastName;
   const email = userData.email;
@@ -49,7 +48,6 @@ const registerNewUser = async function(userData, suppressAlreadyExists = false) 
       user = await Users.findOne({ email: email });
     }
   }
-  console.log('updated user', user);
   return user;
 };
 
@@ -177,10 +175,8 @@ router.post('/social-sign-in', async function(req, res, next) {
     if (!emailError) {
       let user = await registerNewUser(userData, false);
       if (user) {
-        console.log('added user', user);
         let token = await jwt.genJWTToken(user);
         if (user.createdAt - user.modifiedAt === 0) {
-          console.log('send email', user._id, user.email, user.first_name);
           await sendVerifyEmail(req, user._id, user.email, user.first_name);
         }
         result = {
@@ -190,7 +186,6 @@ router.post('/social-sign-in', async function(req, res, next) {
             token: token,
           },
         };
-        console.log('social result', result);
         await Users.updateOne({ _id: user._id }, { last_logged_in: new Date() });
         return res.json(result);
       } else {
@@ -223,7 +218,6 @@ router.get('/get-all-users', async function(req, res, next) {
 });
 
 router.post('/forget-password', async function(req, res, next) {
-  console.log('forget password data', req.body);
   let data = req.body;
   let result = {};
   let user = null;
@@ -247,7 +241,7 @@ router.post('/forget-password', async function(req, res, next) {
         name: user.firstName,
         bodyFirstPrah: ' we got a request to reset your Dishin password.',
         bodySecondPrah: '',
-        buttonHref: 'http://localhost:3001/reset-password/' + resetPasswordToken,
+        buttonHref: 'https://demo.local/reset-password?token=' + resetPasswordToken,
         buttonText: 'Reset your password',
         verifyText: '',
         verifyHref: '',

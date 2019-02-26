@@ -7,10 +7,8 @@ const Common = require('../misc/common');
 const resetUserPassword = async function(data, userId) {
   let password = await Common.hashPassword(data.password);
   let passwordError = await Common.checkPassword(data.password, data.confirmPassword);
-  console.log('user id', userId);
   if (!passwordError) {
     let user = await Users.updateOne({ _id: userId }, { password: password });
-    console.log('reset user', user);
     if (user) {
       return user;
     } else {
@@ -23,7 +21,6 @@ const resetUserPassword = async function(data, userId) {
 
 router.get('/verify-email/:token', async function(req, res, next) {
   const token = req.params.token;
-  console.log('token ', token);
   let result = {};
   try {
     let checkValidToken = await UserTokens.findOne({
@@ -59,15 +56,14 @@ router.get('/verify-email/:token', async function(req, res, next) {
   }
 });
 
-router.post('/reset-password/:userToken', async function(req, res, next) {
-  let token = req.params.userToken;
+router.post('/reset-password', async function(req, res, next) {
+  let token = req.query.token;
   let result = {};
   try {
     let checkValidToken = await UserTokens.findOne({
       token: token,
       expire_date: { $gt: Date.now() },
     });
-    console.log('valid token', checkValidToken);
     if (checkValidToken) {
       let resetUser = await resetUserPassword(req.body, checkValidToken.user_id);
       if (resetUser) {
@@ -95,10 +91,9 @@ router.post('/reset-password/:userToken', async function(req, res, next) {
   }
 });
 
-router.get('/check-reset-token/:userToken', async function(req, res, next) {
-  let token = req.params.userToken;
+router.get('/check-reset-token', async function(req, res, next) {
+  let token = req.query.token;
   let result = {};
-  console.log('check token', token);
   try {
     let checkValidToken = await UserTokens.findOne({
       token: token,
