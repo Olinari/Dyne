@@ -10,7 +10,7 @@ const restaurantSchema = new Schema({
     type: String,
     required: true,
   },
-  country: { type: Schema.Types.ObjectId, ref: 'Country', require: true },
+  country: { type: String, require: false },
   cuisines: [{ type: Schema.Types.ObjectId, ref: 'Cuisine', required: true }],
   kosher_halal: {
     type: String,

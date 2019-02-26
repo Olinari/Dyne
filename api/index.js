@@ -1,5 +1,6 @@
 const user = require('./user');
 const publicRoute = require('./public');
+const restaurant = require('./restaurant');
 
 //const whitelist = ['http://localhost:3001/'];
 
@@ -25,6 +26,7 @@ const handleError = function(err, req, res, next) {
 const api = function(server) {
   server.use('/api/users', user, handleError);
   server.use('/api/public', publicRoute, handleError);
+  server.use('/api/restaurants', restaurant, handleError);
 };
 
 module.exports = api;
