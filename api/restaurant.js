@@ -10,13 +10,26 @@ router.get('/autocomplete', async function(req, res, next) {
   try {
     const regex = new RegExp(name, 'i');
     let response = null;
+
+    // //fix loc
+    // const result = await Restaurant.find();
+    // result.map(async el => {
+    //   await Restaurant.updateOne(
+    //     { _id: el._id },
+    //     { loc: { type: 'Point', coordinates: [el.loc.coordinates[1], el.loc.coordinates[0]] } });
+    // });
+
     if (lat && lng) {
-      response = await Restaurant.find({ name: { $regex: regex } })
-        .select('name address')
-        .where('loc')
-        .within({ center: [lat, lng], radius: 10, unique: true, spherical: true });
+      const miles = 5 / 3963.2; //searching five miles from the user
+      response = await Restaurant.find({
+        loc: {
+          $geoWithin: { $centerSphere: [[lng, lat], miles] },
+        },
+      })
+        .where({ name: { $regex: regex } })
+        .select('name address loc');
     } else {
-      response = await Restaurant.find({ name: { $regex: regex } }).select('name address');
+      response = await Restaurant.find({ name: { $regex: regex } }).select('name address loc');
     }
     if (response) {
       result = {

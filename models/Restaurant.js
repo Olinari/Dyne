@@ -39,6 +39,10 @@ const restaurantSchema = new Schema({
     Friday: [],
     Sunday: [],
   },
+  loc: {
+    type: { type: String },
+    coordinates: [],
+  },
   createdAt: {
     type: Date,
     required: true,
@@ -48,6 +52,8 @@ const restaurantSchema = new Schema({
     required: true,
   },
 });
+
+restaurantSchema.index({ loc: '2dsphere' });
 
 class RestaurantClass {}
 
