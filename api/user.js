@@ -6,6 +6,7 @@ const Roles = require('../models/Roles');
 const UserTokens = require('../models/UserTokens');
 const Common = require('../misc/common');
 const Email = require('../misc/email');
+const { APP_URL } = require('../config');
 
 const registerNewUser = async function(userData, suppressAlreadyExists = false) {
   const firstName = userData.firstName;
@@ -71,6 +72,7 @@ const signInUser = async function(userData) {
 const sendVerifyEmail = async function(req, userId, email, name = null) {
   let verifyEmailToken = await Common.hashPassword(email);
   let verifyEmailTokenExpire = new Date().setFullYear(new Date().getFullYear() + 1);
+  await UserTokens.deleteMany({ user_id: userId, token_type: 'verify-email-token' });
   let tokenInsert = await UserTokens.insertToken(
     userId,
     'verify-email-token',
@@ -88,11 +90,11 @@ const sendVerifyEmail = async function(req, userId, email, name = null) {
       bodyFirstPrah: ' before you go out and eat something new, please verify your email address.',
       bodySecondPrah:
         'If you did not create a Dishin account using this address, please contact us at support@dishin.com.',
-      buttonHref: 'http://' + req.headers.host + '/api/public/verify-email/' + verifyEmailToken,
+      buttonHref: APP_URL + '/verify-email?token=' + verifyEmailToken,
       buttonText: 'Verify your account',
       verifyText: 'Or verify using link:',
-      verifyHref: 'http://' + req.headers.host + '/api/public/verify-email/' + verifyEmailToken,
-      verifyLinkText: 'http://' + req.headers.host + '/api/public/verify-email/' + verifyEmailToken,
+      verifyHref: APP_URL + '/verify-email?token=' + verifyEmailToken,
+      verifyLinkText: APP_URL + '/verify-email?token=' + verifyEmailToken,
     };
     const emailSend = await Email.sendEmail(from, to, subject, replacements, null);
     console.log('email send', emailSend);
@@ -226,6 +228,7 @@ router.post('/forget-password', async function(req, res, next) {
     if (user) {
       let resetPasswordToken = await Common.hashPassword(data.email);
       let resetPasswordExpires = Date.now() + 3600000;
+      await UserTokens.deleteMany({ user_id: user._id, token_type: 'reset-token' });
       await UserTokens.insertToken(
         user._id,
         'reset-token',
@@ -241,7 +244,7 @@ router.post('/forget-password', async function(req, res, next) {
         name: user.firstName,
         bodyFirstPrah: ' we got a request to reset your Dishin password.',
         bodySecondPrah: '',
-        buttonHref: 'https://demo.local/reset-password?token=' + resetPasswordToken,
+        buttonHref: APP_URL + '/reset-password?token=' + resetPasswordToken,
         buttonText: 'Reset your password',
         verifyText: '',
         verifyHref: '',

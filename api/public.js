@@ -19,8 +19,8 @@ const resetUserPassword = async function(data, userId) {
   }
 };
 
-router.get('/verify-email/:token', async function(req, res, next) {
-  const token = req.params.token;
+router.get('/verify-email/', async function(req, res, next) {
+  const token = req.query.token;
   let result = {};
   try {
     let checkValidToken = await UserTokens.findOne({
@@ -31,23 +31,26 @@ router.get('/verify-email/:token', async function(req, res, next) {
         { _id: checkValidToken.user_id },
         { status: 'active' }
       );
-      if (userStatusUpdate) {
+      if (userStatusUpdate.ok === 1) {
         await UserTokens.deleteOne({ _id: checkValidToken._id });
         result = {
           status: 'ok',
           info: `Success! Your Status updated.`,
           data: {},
+          verifyStatus: 'Email verified successfully',
         };
       } else {
         result = {
           status: 'error',
           error: 'Status updating process failed.',
+          verifyStatus: 'Email verified failed',
         };
       }
     } else {
       result = {
         status: 'error',
         error: 'Token did not matched.',
+        verifyStatus: 'Invalid Token',
       };
     }
     return res.json(result);

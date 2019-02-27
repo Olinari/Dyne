@@ -21,6 +21,7 @@ router.get('/autocomplete', async function(req, res, next) {
 
     if (lat && lng) {
       const miles = 5 / 3963.2; //searching five miles from the user
+      console.log('response', lat, lng);
       response = await Restaurant.find({
         loc: {
           $geoWithin: { $centerSphere: [[lng, lat], miles] },
@@ -46,6 +47,7 @@ router.get('/autocomplete', async function(req, res, next) {
     }
     res.json(result);
   } catch (error) {
+    console.log('error', error);
     next(error);
   }
 });
