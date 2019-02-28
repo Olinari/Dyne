@@ -31,12 +31,12 @@ const handleError = function(err, req, res, next) {
 const api = function(server) {
   server.use('/api/users', user, handleError);
   server.use('/api/public', publicRoute, handleError);
-  server.use('/api/restaurant', restaurant, handleError);
+  server.use('/api/restaurants', restaurant, handleError);
   server.use('/api/roles', role, handleError);
-  server.use('/api/tag', tag, handleError);
-  server.use('/api/cuisine', cuisine, handleError);
-  server.use('/api/currency', currency, handleError);
-  server.use('/api/popularDishes', popularDishes, handleError);
+  server.use('/api/tags', tag, handleError);
+  server.use('/api/cuisines', cuisine, handleError);
+  server.use('/api/currencies', currency, handleError);
+  server.use('/api/popular-dishes', popularDishes, handleError);
 };
 
 module.exports = api;
