@@ -10,7 +10,6 @@ router.get('/autocomplete', async function(req, res, next) {
   try {
     const regex = new RegExp(name, 'i');
     let response = null;
-
     // //fix loc
     // const result = await Restaurant.find();
     // result.map(async el => {
@@ -50,6 +49,74 @@ router.get('/autocomplete', async function(req, res, next) {
     console.log('error', error);
     next(error);
   }
+});
+
+router.get('/all-restaurants', async function(req, res) {
+  const list = await Restaurant.find({});
+  let result = {};
+  if (list) {
+    result = {
+      status: 'ok',
+      info: 'List of all restaurant',
+      data: [],
+    };
+    list.map(item => {
+      let restaurant = {
+        id: item.id,
+        name: item.name,
+        address: item.address,
+        country: item.country,
+        couisines: item.couisines,
+        kosher_halal: item.kosher_halal,
+        open_days: item.open_days,
+        opening_hours: item.opening_hours,
+        closing_hours: item.closing_hours,
+        loc: item.loc,
+      };
+      result.data.push(restaurant);
+    });
+  } else {
+    result = {
+      status: 'error',
+      info: 'Restaurant not found',
+      data: [],
+    };
+  }
+  return res.json(result);
+});
+
+router.get('/restaurant-by-id', async function(req, res) {
+  const list = await Restaurant.find({});
+  let result = {};
+  if (list) {
+    result = {
+      status: 'ok',
+      info: 'List of all restaurant',
+      data: [],
+    };
+    list.map(item => {
+      let restaurant = {
+        id: item.id,
+        name: item.name,
+        address: item.address,
+        country: item.country,
+        couisines: item.couisines,
+        kosher_halal: item.kosher_halal,
+        open_days: item.open_days,
+        opening_hours: item.opening_hours,
+        closing_hours: item.closing_hours,
+        loc: item.loc,
+      };
+      result.data.push(restaurant);
+    });
+  } else {
+    result = {
+      status: 'error',
+      info: 'Restaurant not found',
+      data: [],
+    };
+  }
+  return res.json(result);
 });
 
 module.exports = router;
