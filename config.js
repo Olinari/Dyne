@@ -10,7 +10,7 @@ const configs = function() {
     case 'production':
       return {
         APP_URL: 'https://dishin.mindzhub.com',
-        API_URL: 'https://dishinapi.mindzhub.com',
+        API_URL: 'https://dishinapi.mindzhub.com/api',
       };
 
     default:

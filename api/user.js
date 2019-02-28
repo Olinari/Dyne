@@ -249,7 +249,7 @@ router.post('/forget-password', async function(req, res, next) {
         verifyText: '',
         verifyHref: '',
         verifyLinkText: '',
-        forgotPasswordDesc: `If you ignore this message, your password won't be changed, if your don't request a password reset.tellus`,
+        forgotPasswordDesc: `If you ignore this message, your password won't be changed, if your didn't request a password reset, tellus`,
       };
       const emailSend = await Email.sendEmail(from, to, subject, replacements);
       console.log('email send', emailSend);
