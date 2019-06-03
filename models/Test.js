@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 var mongoosePaginate = require('mongoose-paginate');
-var lastModified = require('./plugins/lastModified');
 
-const tagSchema = new Schema({
+const testSchema = new Schema({
   name: String,
+  price: Schema.Types.Number,
   createdAt: {
     type: Date,
     required: true,
@@ -17,14 +17,12 @@ const tagSchema = new Schema({
   },
 });
 
-class TagClass {}
+class TestClass {}
 
-tagSchema.loadClass(TagClass);
+testSchema.loadClass(TestClass);
 
-tagSchema.plugin(mongoosePaginate);
+testSchema.plugin(mongoosePaginate);
 
-tagSchema.plugin(lastModified);
+const Test = mongoose.model('Test', testSchema);
 
-const Tag = mongoose.model('Tag', tagSchema);
-
-module.exports = Tag;
+module.exports = Test;

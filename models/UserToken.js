@@ -9,10 +9,12 @@ const userTokensSchema = new Schema({
   createdAt: {
     type: Date,
     required: true,
+    default: new Date(),
   },
   modifiedAt: {
     type: Date,
     required: true,
+    default: new Date(),
   },
 });
 
@@ -31,6 +33,6 @@ class userTokensClass {
 
 userTokensSchema.loadClass(userTokensClass);
 
-const userTokens = mongoose.model('userTokens', userTokensSchema);
+const UserToken = mongoose.model('UserToken', userTokensSchema);
 
-module.exports = userTokens;
+module.exports = UserToken;

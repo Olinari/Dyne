@@ -3,9 +3,8 @@ const publicRoute = require('./public');
 const restaurant = require('./restaurant');
 const role = require('./role');
 const tag = require('./tag');
-const cuisine = require('./cuisine');
-const currency = require('./currency');
-const popularDishes = require('./popularDishes');
+const dish = require('./dish');
+const systemReward = require('./systemReward');
 
 //const whitelist = ['http://localhost:3001/'];
 
@@ -23,7 +22,7 @@ const popularDishes = require('./popularDishes');
 /*eslint no-unused-vars: 0*/
 const handleError = function(err, req, res, next) {
   if (err) {
-    //console.log('error', err.message);
+    console.log('error', err.message);
     res.json({ status: 'error', data: null, error: err.message });
   }
 };
@@ -34,9 +33,8 @@ const api = function(server) {
   server.use('/api/restaurants', restaurant, handleError);
   server.use('/api/roles', role, handleError);
   server.use('/api/tags', tag, handleError);
-  server.use('/api/cuisines', cuisine, handleError);
-  server.use('/api/currencies', currency, handleError);
-  server.use('/api/popular-dishes', popularDishes, handleError);
+  server.use('/api/dishes', dish, handleError);
+  server.use('/api/systemRewards', systemReward, handleError);
 };
 
 module.exports = api;

@@ -1,4 +1,6 @@
 const bcrypt = require('bcrypt');
+const { resultError } = require('../api/helper');
+const jwt = require('../misc/jwt_token');
 
 class Common {
   static async hashPassword(password) {
@@ -36,4 +38,30 @@ class Common {
     return emailError;
   }
 }
-module.exports = Common;
+
+const authenticateToken = function(req, res, next) {
+  let token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
+  if (token.startsWith('Bearer')) {
+    // Remove Bearer from string
+    token = token.slice(7, token.length);
+  }
+  try {
+    if (token) {
+      jwt
+        .verifyJWTToken(token)
+        .then(response => {
+          req.decodedToken = response;
+          next();
+        })
+        .catch(() => {
+          res.json(resultError(null, 'Token is invalid'));
+        });
+    } else {
+      return res.json(resultError(null, 'Auth token is not supplied'));
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { Common, authenticateToken };

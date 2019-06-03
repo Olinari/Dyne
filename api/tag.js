@@ -1,72 +1,44 @@
+/*eslint no-unused-vars: [0]*/
 const express = require('express');
 const router = express.Router();
 const Tag = require('../models/Tag');
+const Dish = require('../models/Dish');
+const RestaurantLocation = require('../models/RestaurantLocation');
+const Restaurant = require('../models/Restaurant');
+const { resultOk, resultError } = require('./helper');
 
-router.post('/add', async function(req, res) {
-  const data = req.body;
-  let result = {};
-  const obj = {
-    name: data.name,
-    createdAt: new Date(),
-    modifiedAt: new Date(),
-  };
-  const add = await Tag.create(obj);
-  if (add) {
-    result = {
-      status: 'ok',
-      info: 'Tag is added',
-      data: {},
-    };
-  } else {
-    result = {
-      status: 'error',
-      info: 'Tag is not added',
-    };
-  }
-  return res.json(result);
+router.get('/', function(req, res, next) {
+  let page = req.query.page || 1;
+  let limit = req.query.limit || 10;
+  Tag.paginate({}, { page, limit })
+    .then(list => {
+      const result = resultOk(list.docs);
+      res.json(result);
+    })
+    .catch(err => {
+      next(err);
+    });
 });
 
-router.post('/edit', async function(req, res) {
-  const data = req.body;
-  let result = {};
-  const edit = await Tag.findByIdAndUpdate(data.id, { name: data.name, modifiedAt: new Date() });
-  if (edit) {
-    result = {
-      status: 'ok',
-      info: 'Tag is edited',
-      data: {},
-    };
-  } else {
-    result = {
-      status: 'error',
-      info: 'Tag is not edited',
-    };
-  }
-  return res.json(result);
-});
+const getTmpCount = async function(model, id) {
+  return await model.countDocuments({ tags: { $in: id } }).exec();
+};
 
-router.delete('/del', async function(req, res) {
-  const data = req.body;
-  let result = {};
-  const del = await Tag.findByIdAndDelete(data.id);
-  if (del) {
-    result = {
-      status: 'ok',
-      info: 'Tag is deleted',
-      data: {},
-    };
-  } else {
-    result = {
-      status: 'error',
-      info: 'Tag is not deleted',
-    };
-  }
-  return res.json(result);
-});
+router.get('/with-counts', async function(req, res, next) {
+  try {
+    let tags = await Tag.find({}).exec();
+    let newTags = [];
 
-router.post('/list', async function(req, res) {
-  const list = await Tag.find({}).select('name');
-  return res.json(list);
+    for (const index in tags) {
+      const tagObj = tags[index].toObject();
+      tagObj.restCount = await getTmpCount(RestaurantLocation, tagObj._id);
+      tagObj.dishCount = await getTmpCount(Dish, tagObj._id);
+      newTags.push(tagObj);
+    }
+    res.json(resultOk(newTags, ''));
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

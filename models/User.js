@@ -45,13 +45,20 @@ const userSchema = new Schema({
     of: String,
     required: false,
   },
+  image: {
+    type: Schema.Types.ObjectId,
+    ref: 'Image',
+    require: false,
+  },
   createdAt: {
     type: Date,
     required: true,
+    default: new Date(),
   },
   modifiedAt: {
     type: Date,
     required: true,
+    default: new Date(),
   },
 });
 
@@ -65,7 +72,8 @@ class UsersClass {
     status,
     signUpFrom,
     providerId = null,
-    socialMeta = null
+    socialMeta = null,
+    image = null
   ) {
     const obj = {
       first_name: firstName,
@@ -78,6 +86,7 @@ class UsersClass {
       last_logged_in: '',
       provider_id: providerId,
       social_meta: socialMeta,
+      image: image,
       createdAt: new Date(),
       modifiedAt: new Date(),
     };
@@ -87,6 +96,6 @@ class UsersClass {
 
 userSchema.loadClass(UsersClass);
 
-const Users = mongoose.model('Users', userSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = Users;
+module.exports = User;

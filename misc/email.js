@@ -3,14 +3,15 @@ const handlebars = require('handlebars');
 const fs = require('fs');
 const path = require('path');
 const appDir = path.dirname(require.main.filename);
+const { emailSetting } = require('../config');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.sendgrid.net',
   port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: 'apikey', // account.user, // generated ethereal user
-    pass: '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', // account.pass, // generated ethereal password
+    user: emailSetting.smtpUser,
+    pass: emailSetting.smtpPassword,
   },
 });
 
@@ -36,6 +37,14 @@ class Email {
         to: to,
         subject: subject,
         html: htmlToSend,
+        attachments: [
+          {
+            filename: 'logo.png',
+            path:
+              'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAARCAYAAADOk8xKAAABA0lEQVRIS7WVURKDIAxEs1yserLak0kvRjphCBMQKjCjX7UT9+2GGEELVwjhJKINwA7Az0hgplhrQwgsvwEcAD4zGkNAZt6I6MXMR0fcS9IR+F+ggJj5Le1LiYg5hisuAPn/u9RdoIAkkRUjopikBjaSx7St2ibQDEV0fudaDNhuqMnWUF2ACkspuk57g1Kbdc4VjOImuTyTQ++c22cmUGv1ONS01SmAOu5pQKbfMWvOdsq2NgOtq5EzG0luAuRuZaB1VPd9RLxVU4WIHbPA5e3xz1C9lSJQh2V1XU0DqwPura+lztqlIEeF+r1ZUr15yGwrL8DrcnyCmjShX4IHGVb6+wNC77oBRzBkuAAAAABJRU5ErkJggg==',
+            cid: 'logo@dishin.com', //same cid value as in the html img src
+          },
+        ],
       };
       transporter.sendMail(mailOptions, function(error, response) {
         if (error) {

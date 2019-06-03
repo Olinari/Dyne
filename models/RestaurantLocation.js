@@ -1,26 +1,17 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-var mongoosePaginate = require('mongoose-paginate');
-var lastModified = require('./plugins/lastModified');
 
-const menuSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  category: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'MenuCategory',
-      require: true,
-    },
-  ],
-
+const restaurantLocationSchema = new Schema({
   restaurant_id: {
     type: Schema.Types.ObjectId,
     ref: 'Restaurant',
     require: true,
   },
+  address: {
+    type: String,
+    required: true,
+  },
+  country: { type: String, require: false },
   open_days: [
     {
       type: String,
@@ -43,6 +34,17 @@ const menuSchema = new Schema({
     Friday: [],
     Sunday: [],
   },
+  loc: {
+    type: { type: String },
+    coordinates: [],
+  },
+  tags: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Tag',
+      require: true,
+    },
+  ],
   createdAt: {
     type: Date,
     required: true,
@@ -55,14 +57,12 @@ const menuSchema = new Schema({
   },
 });
 
-class MenuClass {}
+restaurantLocationSchema.index({ loc: '2dsphere' });
 
-menuSchema.loadClass(MenuClass);
+class RestaurantLocationClass {}
 
-menuSchema.plugin(mongoosePaginate);
+restaurantLocationSchema.loadClass(RestaurantLocationClass);
 
-menuSchema.plugin(lastModified);
+const RestaurantLocation = mongoose.model('RestaurantLocation', restaurantLocationSchema);
 
-const Menu = mongoose.model('Menu', menuSchema);
-
-module.exports = Menu;
+module.exports = RestaurantLocation;

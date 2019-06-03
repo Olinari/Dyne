@@ -3,8 +3,7 @@ const { Schema } = mongoose;
 var mongoosePaginate = require('mongoose-paginate');
 var lastModified = require('./plugins/lastModified');
 
-const currencySchema = new Schema({
-  code: String,
+const roleSchema = new Schema({
   name: String,
   createdAt: {
     type: Date,
@@ -18,14 +17,14 @@ const currencySchema = new Schema({
   },
 });
 
-class CurrencyClass {}
+class RolesClass {}
 
-currencySchema.loadClass(CurrencyClass);
+roleSchema.loadClass(RolesClass);
 
-currencySchema.plugin(mongoosePaginate);
+roleSchema.plugin(mongoosePaginate);
 
-currencySchema.plugin(lastModified);
+roleSchema.plugin(lastModified);
 
-const Currency = mongoose.model('Currency', currencySchema);
+const Role = mongoose.model('Role', roleSchema);
 
-module.exports = Currency;
+module.exports = Role;

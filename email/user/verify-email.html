@@ -1,7 +1,9 @@
 <html>
     <head>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|PT+Sans|Lato|Montserrat|Abril+Fatface" rel="stylesheet" type="text/css">
         <!-- <link rel="styleSheet" href="./css/style.css"/> -->
-        <style>
+        <style type="text/css" id="dishInStyles">
+          /* @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500|PT+Sans|Lato|Montserrat|Abril+Fatface"); */
 .email-container {
   width: 100%;
   margin: 0 auto;
@@ -26,23 +28,29 @@
 .email-heading {
   text-align: center;
   margin-top: 50px;
-  color: #f82100;
+  color: #f44336;
+  font-family: 'Abril Fatface', cursive;
+  font-size: 34px;
 }
 
 .heading-bar {
   width: 120px;
-  border-color: #908e8e;
+  border-color: #bcbcbc;
 }
 
 .heading-desc {
   text-align: center;
-  color: #908e8e;
+  color: #949494;
+  font-family: 'Lato';
+  font-size: 22px;
 }
 
-.body-desc {
-  text-align: center;
+.body-desc p {
   margin-top: 40px;
   margin-bottom: 40px;
+  font-family: 'Lato';
+  font-size: 14px;
+  color: #656565;
 }
 
 .btn-red {
@@ -64,25 +72,49 @@
   text-align: center;
   margin-bottom: 40px;
 }
-
 .verify-link {
   text-align: center;
 }
+
+.verify-link p {
+  color: #656565;
+  text-align: center;
+
+}
 .verify-link a {
   color: #fbb3ac;
-}
-
-.forget-password-desc {
-  border-bottom: 2px solid #eeeeee;
-}
-
-.email-footer {
   text-align: center;
-  color: #908e8e;
 }
 
-.email-footer a {
+.forget-password-desc p {
+  border-bottom: 2px solid #eeeeee;
+  font-family: 'Lato';
+  font-size: 14px;
+  color: #656565;
+  padding-bottom: 10px;
+}
+
+.email-footer p {
+  text-align: center;
+  color: #bcbcbc;
+  font-family: 'Lato';
+  font-size: 12px;
+}
+
+.email-footer p a {
   color: #f44336;
+}
+
+.username {
+  color: #f44336;
+}
+.tellUs a {
+  color: #f44336;
+  text-decoration: underline;
+}
+.bodySecondPrah a {
+  color: #656565;
+  text-decoration: none;
 }
 
         </style>
@@ -91,19 +123,19 @@
         <div class="email-container">
             <div class="email-content">
                 <div class="email-header">
-                    <img src="https://dishin.mindzhub.com/static/imgs/logo.png"/>
+                    <img src="cid:logo@dishin.com" alt=""/>
                 </div>
                 <div class="email-body">
                     <div class="email-heading">
-                        <h1>{{emailHeading}}</h1>
+                        {{emailHeading}}
                     </div>
                     <hr class="heading-bar" />
                     <div class="heading-desc">
-                        <h3>{{headingDesc}}</h3>
+                        {{headingDesc}}
                     </div>
                     <div class="body-desc">
-                        <p><span>Hi {{name}},</span>{{bodyFirstPrah}}</p>
-                        <p>{{bodySecondPrah}}</p>
+                        <p>Hi, <span class="username">{{name}}</span>{{bodyFirstPrah}}</p>
+                        <p class="bodySecondPrah">{{bodySecondPrah}}</p>
                     </div>
                     <div class="email-button">
                         <a href="{{{buttonHref}}}"><button class="btn btn-red">{{buttonText}}</button></a>
@@ -114,7 +146,7 @@
                     </div>
                 </div>
                 <div class="forget-password-desc">
-                    <p>{{forgotPasswordDesc}}</p>
+                    <p>{{forgotPasswordDesc}}<span class="tellUs"><a href="{{{tellUsHref}}}">{{tellUs}}</a></span></p>
                 </div>
                 <div class="email-footer">
                     <p>Sent by<a href="{{{footerHref}}}"> Dishin</a> .  Israel, Kfar Shmaryahu, Derech HaSadot, 18</p>

@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+var mongoosePaginate = require('mongoose-paginate');
+var lastModified = require('./plugins/lastModified');
 
 const dishSchema = new Schema({
   name: {
+    type: String,
+    required: true,
+  },
+  slug: {
     type: String,
     required: true,
   },
@@ -11,15 +17,15 @@ const dishSchema = new Schema({
     ref: 'Restaurant',
     require: true,
   },
-  menus: [
+  menuCategories: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Menu',
+      ref: 'MenuCategory',
       require: true,
     },
   ],
   description: String,
-  price: Schema.Types.Decimal128,
+  price: Schema.Types.Number,
   currency: {
     type: Schema.Types.ObjectId,
     ref: 'Currency',
@@ -29,12 +35,9 @@ const dishSchema = new Schema({
   popular_name: {
     type: Schema.Types.ObjectId,
     ref: 'PopularDish',
-    required: true,
+    required: false,
+    default: null,
   },
-  vegan: Boolean,
-  vegetarian: Boolean,
-  gluten_free: Boolean,
-  not_hot: Boolean,
   tags: [
     {
       type: Schema.Types.ObjectId,
@@ -42,19 +45,60 @@ const dishSchema = new Schema({
       required: true,
     },
   ],
+  images: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Image',
+      require: false,
+    },
+  ],
+  totalValueForMoneyRatings: {
+    type: Number,
+    required: false,
+  },
+  totalTasteRatings: {
+    type: Number,
+    required: false,
+  },
+  totalLookAndFeelRatings: {
+    type: Number,
+    required: false,
+  },
+  totalRatings: {
+    type: Number,
+    required: false,
+  },
+  totalReviews: {
+    type: Number,
+    required: false,
+  },
   createdAt: {
     type: Date,
     required: true,
+    default: new Date(),
   },
   modifiedAt: {
     type: Date,
     required: true,
+    default: new Date(),
   },
 });
+
+// dishSchema.post('findOne', function(result) {
+//   console.log(this instanceof mongoose.Query); // true
+//   // prints returned documents
+//   console.log('find() returned ' + JSON.stringify(result));
+//   // prints number of milliseconds the query took
+//   console.log('find() took ' + (Date.now() - this.start) + ' millis');
+// });
 
 class DishClass {}
 
 dishSchema.loadClass(DishClass);
+
+dishSchema.plugin(mongoosePaginate);
+
+dishSchema.plugin(lastModified);
 
 const Dish = mongoose.model('Dish', dishSchema);
 

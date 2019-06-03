@@ -11,9 +11,12 @@ class JwtToken {
       // roleName: user.roleName,
       email: user.email,
       status: user.status,
-      exp: new Date().getTime() + 31536000,
+      signUpFrom: user.sign_up_from,
+      userName: user.first_name,
+      userAvatar: user.image ? user.image.path || null : null,
+      //exp: '60 days', //new Date().getTime() + 31536000,
     };
-    let token = jwt.sign(payload, '--DishIn--');
+    let token = jwt.sign(payload, '--DishIn--', { expiresIn: '30 days' });
     return token;
   }
 
