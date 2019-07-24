@@ -31,6 +31,6 @@ app.options('*', cors());
 Api(app);
 
 const port = 8282;
-app.listen(port, '127.0.0.1');
+app.listen(port, '0.0.0.0');
 
 module.exports = app;
