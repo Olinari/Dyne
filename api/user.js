@@ -149,11 +149,11 @@ const sendVerifyEmail = async function(req, userId, email, name = null) {
       bodyFirstPrah: ` before you go out and eat something new, please verify your email address.`,
       bodySecondPrah:
         'If you did not create a Dishin account using this address, please contact us at support@dishin.com.',
-      buttonHref: APP_URL + '/verify-email?token=' + verifyEmailToken,
+      buttonHref: '/verify-email?token=' + verifyEmailToken,
       buttonText: 'Verify your account',
       verifyText: 'Or verify using link:',
-      verifyHref: APP_URL + '/verify-email?token=' + verifyEmailToken,
-      verifyLinkText: APP_URL + '/verify-email?token=' + verifyEmailToken,
+      verifyHref: '/verify-email?token=' + verifyEmailToken,
+      verifyLinkText: '/verify-email?token=' + verifyEmailToken,
     };
     const emailSend = await Email.sendEmail(from, to, subject, replacements, null);
     return true;
@@ -309,7 +309,7 @@ router.post('/forget-password', async function(req, res, next) {
         name: name,
         bodyFirstPrah: ` we got a request to reset your Dishin password.`,
         bodySecondPrah: '',
-        buttonHref: APP_URL + '/reset-password?token=' + resetPasswordToken,
+        buttonHref: '/reset-password?token=' + resetPasswordToken,
         buttonText: 'Reset my password',
         verifyText: '',
         verifyHref: '',

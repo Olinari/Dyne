@@ -25,12 +25,12 @@ app.use(bodyParser.urlencoded({ extended: false, limit: '50mb' }));
 // parse application/json
 app.use(bodyParser.json());
 // app.use('/api', Api);
-const corsOptions = {}; // exposedHeaders: "DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type" };
+const corsOptions = { origin: true }; // exposedHeaders: "DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type" };
 app.use(cors(corsOptions));
 app.options('*', cors());
 Api(app);
 
 const port = 8282;
-app.listen(port);
+app.listen(port, '127.0.0.1');
 
 module.exports = app;
