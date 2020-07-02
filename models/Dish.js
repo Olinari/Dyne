@@ -8,20 +8,25 @@ const dishSchema = new Schema({
     type: String,
     required: true,
   },
+  id: {
+    type: Number,
+    required: true,
+  },
+
   slug: {
     type: String,
-    required: true,
+    required: false,
   },
   restaurant_id: {
     type: Schema.Types.ObjectId,
     ref: 'Restaurant',
-    require: true,
+    require: false,
   },
   menuCategories: [
     {
       type: Schema.Types.ObjectId,
       ref: 'MenuCategory',
-      require: true,
+      require: false,
     },
   ],
   description: String,
@@ -29,7 +34,7 @@ const dishSchema = new Schema({
   currency: {
     type: Schema.Types.ObjectId,
     ref: 'Currency',
-    require: true,
+    require: false,
   },
   calories: Number,
   popular_name: {
@@ -42,16 +47,14 @@ const dishSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'Tag',
-      required: true,
+      required: false,
     },
   ],
-  images: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Image',
-      require: false,
-    },
-  ],
+  images: {
+    type: Array,
+    required: false,
+  },
+
   totalValueForMoneyRatings: {
     type: Number,
     required: false,

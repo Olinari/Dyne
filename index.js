@@ -1,19 +1,10 @@
 const express = require('express');
 const app = express();
+
 const cors = require('cors');
-const mongoose = require('mongoose');
-const settings = require('./config');
+const ConnectDb = require('./config/db');
 
-const options = {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-};
-
-mongoose.connect(
-  `mongodb://${settings.MONGO_HOST}:${settings.MONGO_PORT}/${settings.MONGO_DB_NAME}`,
-  options
-);
+ConnectDb();
 
 const bodyParser = require('body-parser');
 const Api = require('./api');
