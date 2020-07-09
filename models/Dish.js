@@ -4,31 +4,45 @@ var mongoosePaginate = require('mongoose-paginate');
 var lastModified = require('./plugins/lastModified');
 
 const dishSchema = new Schema({
-  name: {
+  dishName: {
     type: String,
     required: true,
   },
-  id: {
+  restaurantName: {
+    type: String,
+    required: true,
+  },
+  iD: {
     type: Number,
     required: true,
   },
-
+  dyneScore: {
+    type: Number,
+    required: false,
+  },
   slug: {
     type: String,
     required: false,
   },
+
   restaurant_id: {
     type: Schema.Types.ObjectId,
     ref: 'Restaurant',
     require: false,
   },
-  menuCategories: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'MenuCategory',
-      require: false,
-    },
-  ],
+  wolt: {
+    type: String,
+    require: false,
+  },
+  tenbis: {
+    type: String,
+    require: false,
+  },
+  mishloha: {
+    type: String,
+    require: false,
+  },
+
   description: String,
   price: Schema.Types.Number,
   currency: {
@@ -36,45 +50,12 @@ const dishSchema = new Schema({
     ref: 'Currency',
     require: false,
   },
-  calories: Number,
-  popular_name: {
-    type: Schema.Types.ObjectId,
-    ref: 'PopularDish',
-    required: false,
-    default: null,
-  },
-  tags: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Tag',
-      required: false,
-    },
-  ],
+
   images: {
     type: Array,
     required: false,
   },
 
-  totalValueForMoneyRatings: {
-    type: Number,
-    required: false,
-  },
-  totalTasteRatings: {
-    type: Number,
-    required: false,
-  },
-  totalLookAndFeelRatings: {
-    type: Number,
-    required: false,
-  },
-  totalRatings: {
-    type: Number,
-    required: false,
-  },
-  totalReviews: {
-    type: Number,
-    required: false,
-  },
   createdAt: {
     type: Date,
     required: true,

@@ -7,25 +7,17 @@ const { resultOk, resultError } = require('./helper');
 router.post('/', function(req, res, next) {
   const data = req.body;
   const obj = {
-    name: data.name,
-    /*  restaurant_id: data.restaurant_id,
-    menus: data.menus,
+    name: data.dishName,
+    restaurantName: data.restaurantName,
     description: data.description,
     price: data.price,
-    currency: data.currency,
-    calories: data.calories,
+
     popular_name: data.popular_name,
     tags: data.tags,
-    images: data.images, */
+    images: data.images,
   };
-  console.log(data.name);
-  Dish.find({
-    /* 
-          restaurant_id: data.restaurant_id,
-          menus: { $in: data.menus }, 
-          */
-    name: data.name,
-  })
+
+  Dish.find(obj)
     .then(dish => {
       if (dish.length === 0) {
         Dish.create(obj)
