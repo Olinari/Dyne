@@ -4,6 +4,7 @@ const restaurant = require('./restaurant');
 const role = require('./role');
 const tag = require('./tag');
 const dish = require('./dish');
+const search = require('./search');
 const systemReward = require('./systemReward');
 
 //const whitelist = ['http://localhost:3001/'];
@@ -35,6 +36,7 @@ const api = function(server) {
   server.use('/api/tags', tag, handleError);
   server.use('/api/dishes', dish, handleError);
   server.use('/api/systemRewards', systemReward, handleError);
+  server.use('/api/search', search, handleError);
 };
 
 module.exports = api;

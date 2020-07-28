@@ -7,10 +7,12 @@ const dishSchema = new Schema({
   dishName: {
     type: String,
     required: true,
+    index: true,
   },
   restaurantName: {
     type: String,
     required: true,
+    index: true,
   },
   iD: {
     type: Number,
@@ -43,7 +45,7 @@ const dishSchema = new Schema({
     require: false,
   },
 
-  description: String,
+  description: { type: String, index: true },
   price: Schema.Types.Number,
   currency: {
     type: Schema.Types.ObjectId,
@@ -77,6 +79,7 @@ const dishSchema = new Schema({
 // });
 
 class DishClass {}
+dishSchema.index();
 
 dishSchema.loadClass(DishClass);
 
