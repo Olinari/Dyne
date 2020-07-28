@@ -2,9 +2,9 @@ const configs = function() {
   switch (process.env.NODE_ENV) {
     case 'development':
       return {
-        APP_URL: 'https://demo.local',
-        API_URL: 'http://localhost:8282/api',
-        API_IMAGE_URL: 'http://localhost:8282',
+        APP_URL: 'http://dyne.menu',
+        API_URL: 'http://backend.dyne.menu/api',
+        API_IMAGE_URL: 'http://backend.dyne.menu',
         MONGO_HOST: 'localhost',
         MONGO_PORT: '27017',
         MONGO_DB_NAME: 'dishin_live',
@@ -12,9 +12,9 @@ const configs = function() {
 
     case 'production':
       return {
-        APP_URL: 'https://dishin.mindzhub.com',
-        API_URL: 'https://dishinapi.mindzhub.com/api',
-        API_IMAGE_URL: 'http://localhost:8282',
+        APP_URL: 'http://dyne.menu',
+        API_URL: 'http://backend.dyne.menu/api',
+        API_IMAGE_URL: 'http://backend.dyne.menu',
         MONGO_HOST: 'localhost',
         MONGO_PORT: '28000',
         MONGO_DB_NAME: 'dishin',
