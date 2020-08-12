@@ -15,10 +15,14 @@ const restaurantSchema = new Schema({
     type: String,
     required: false,
   },
-  cuisines: [{ type: Schema.Types.ObjectId, ref: 'Cuisine', required: true }],
-  kosher_halal: {
+  address: {
     type: String,
     required: true,
+  },
+  cuisines: [{ type: Schema.Types.ObjectId, ref: 'Cuisine', required: false }],
+  kosher_halal: {
+    type: String,
+    required: false,
     enum: ['None', 'Kosher', 'Halal'],
   },
   images: [
@@ -30,17 +34,17 @@ const restaurantSchema = new Schema({
   ],
   isSponsored: {
     type: Boolean,
-    required: true,
+    required: false,
     default: false,
   },
   createdAt: {
     type: Date,
-    required: true,
+    required: false,
     default: new Date(),
   },
   modifiedAt: {
     type: Date,
-    required: true,
+    required: false,
     default: new Date(),
   },
 });

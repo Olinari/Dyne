@@ -32,6 +32,13 @@ const getTagId = function(req, res, next) {
   }
 };
 
+router.get('/getBySlug', async (req, res, next) => {
+  const slug = req.query.slug;
+  const restaurant = await Restaurant.findOne({ slug: slug });
+  console.log(restaurant);
+  res.json(resultOk(restaurant, 'Found restaurant'));
+});
+
 const getToken = function(req, res, next) {
   let token = req.headers['x-access-token'] || req.headers['authorization']; // Express headers are auto converted to lowercase
   if (token.startsWith('Bearer')) {

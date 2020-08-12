@@ -38,6 +38,7 @@ router.post('/', function(req, res, next) {
 
 router.get('/', function(req, res, next) {
   Dish.find({})
+    .populate('restaurant_id')
 
     .then(dish => {
       res.json(resultOk(dish));
