@@ -6,9 +6,6 @@ const Dish = require('../models/Dish');
 const { resultOk } = require('./helper');
 
 router.get('/:searchTerm', function(req, res, next) {
-  console.log(req.params.searchTermd);
-  Dish.find({ $text: { $search: req.params.searchTerm } });
-
   Dish.find({
     $or: [
       { dishName: { $regex: req.params.searchTerm, $options: 'i' } },

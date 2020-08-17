@@ -34,8 +34,8 @@ const getTagId = function(req, res, next) {
 
 router.get('/getBySlug', async (req, res, next) => {
   const slug = req.query.slug;
-  const restaurant = await Restaurant.findOne({ slug: slug });
-  const dishes = await Dish.find({ restaurant_id: restaurant._id });
+  const restaurant = await Restaurant.findOne({ slug: slug }).catch(err => console.log(err));
+  const dishes = await Dish.find({ restaurant_id: restaurant._id }).catch(err => console.log(err));
   res.json(resultOk({ restaurant, dishes }, 'Found restaurant'));
 });
 

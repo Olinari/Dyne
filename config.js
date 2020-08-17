@@ -10,7 +10,7 @@ const configs = function() {
         MONGO_DB_NAME: 'dishin_live',
       };
 
-    case 'production':
+    /*    case 'production':
       return {
         APP_URL: 'http://dyne.menu',
         API_URL: 'http://backend.dyne.menu/api',
@@ -18,7 +18,7 @@ const configs = function() {
         MONGO_HOST: 'localhost',
         MONGO_PORT: '28000',
         MONGO_DB_NAME: 'dishin',
-      };
+      }; */
 
     default:
       return {
