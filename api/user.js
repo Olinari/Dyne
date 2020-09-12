@@ -54,7 +54,7 @@ const registerNewUser = async function(userData, suppressAlreadyExists = false) 
       lastName,
       email,
       password,
-      role._id,
+      role ? role._id : null,
       status,
       signUpFrom,
       providerId,
@@ -204,7 +204,9 @@ router.post('/sign-in', async function(req, res, next) {
     const user = await signInUser(userData);
     if (user) {
       const roleName = await Role.findOne({ _id: user.role }, 'name');
-      user.roleName = roleName.name;
+      if (roleName) {
+        // roleNameuser.roleName = roleName.name;
+      }
       let token = jwt.genJWTToken(user);
       let tokenExpires = Date.now() + 24 * 3600000;
       result = {
