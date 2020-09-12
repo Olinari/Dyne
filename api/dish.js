@@ -48,4 +48,14 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.get('/getBySlug', async (req, res) => {
+  const slug = req.query.slug;
+  const dish = await Dish.findOne({ slug: slug });
+  if (dish != null) {
+    res.json(resultOk({ dish }, 'Found dish'));
+  } else {
+    res.json(resultError(`${slug} was not found`));
+  }
+});
+
 module.exports = router;
