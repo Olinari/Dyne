@@ -48,9 +48,9 @@ const distanceToMe = [
 ];
 
 const emailSetting = {
-  smtpUser: '', //TODO: update smtp user
-  smtpPassword: '', // TODO: update smtp password
-  emailAddress: '', //TODO: from email address to send emails
+  smtpUser: 'dyne4test@gmail.com', //TODO: update smtp user
+  smtpPassword: 'strongpassword', // TODO: update smtp password
+  emailAddress: 'dyne4test@gmail.com', //TODO: from email address to send emails
 };
 
 const settings = {

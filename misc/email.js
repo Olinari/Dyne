@@ -6,9 +6,9 @@ const appDir = path.dirname(require.main.filename);
 const { emailSetting } = require('../config');
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.sendgrid.net',
-  port: 587,
-  secure: false, // true for 465, false for other ports
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // true for 465, false for other ports
   auth: {
     user: emailSetting.smtpUser,
     pass: emailSetting.smtpPassword,
