@@ -71,7 +71,7 @@ const distanceToMeCond = dtm => {
   // console.log('query', query);
 
   query = { minDistance: minDistanceMeters, maxDistance: maxDistanceMeters };
-  console.log('distance to me min,max', query);
+
   return query;
 };
 

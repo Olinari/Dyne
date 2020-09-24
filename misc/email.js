@@ -46,11 +46,9 @@ class Email {
           },
         ],
       };
-      transporter.sendMail(mailOptions, function(error, response) {
+      transporter.sendMail(mailOptions, function(error) {
         if (error) {
           console.log('email error', error);
-        } else {
-          console.log('email response', response);
         }
       });
     });
