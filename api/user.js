@@ -149,10 +149,10 @@ const sendVerifyEmail = async function(req, userId, email, name = null) {
       bodyFirstPrah: ` before you go out and eat something new, please verify your email address.`,
       bodySecondPrah:
         'If you did not create a Dishin account using this address, please contact us at support@dishin.com.',
-      buttonHref: '/verify-email?token=' + verifyEmailToken,
+      buttonHref: APP_URL + '/verify-email?token=' + verifyEmailToken,
       buttonText: 'Verify your account',
       verifyText: 'Or verify using link:',
-      verifyHref: '/verify-email?token=' + verifyEmailToken,
+      verifyHref: APP_URL + '/verify-email?token=' + verifyEmailToken,
       verifyLinkText: '/verify-email?token=' + verifyEmailToken,
     };
     const emailSend = await Email.sendEmail(from, to, subject, replacements, null);
@@ -311,14 +311,14 @@ router.post('/forget-password', async function(req, res, next) {
         name: name,
         bodyFirstPrah: ` we got a request to reset your Dishin password.`,
         bodySecondPrah: '',
-        buttonHref: '/reset-password?token=' + resetPasswordToken,
+        buttonHref: APP_URL + '/reset-password?token=' + resetPasswordToken,
         buttonText: 'Reset my password',
         verifyText: '',
-        verifyHref: '',
+        verifyHref: APP_URL + '',
         verifyLinkText: '',
         forgotPasswordDesc: `If you ignore this message, your password won't be changed. If you didn't request a password reset, `,
         tellUs: 'tell us',
-        tellUsHref: '',
+        tellUsHref: APP_URL + '',
       };
       const emailSend = await Email.sendEmail(from, to, subject, replacements);
       if (emailSend) {
