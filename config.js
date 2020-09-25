@@ -1,4 +1,5 @@
 const configs = function() {
+  console.log('EENNVV()' + process.env.NODE_ENV);
   switch (process.env.NODE_ENV) {
     case 'development':
       return {
