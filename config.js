@@ -4,7 +4,7 @@ const configs = function() {
       return {
         APP_URL: 'http://localhost:3001',
         API_URL: 'http://localhost:8282/api',
-        API_IMAGE_URL: 'http://localhost:8282',
+        API_IMAGE_URL: 'localhost:8282',
         MONGO_HOST: 'localhost',
         MONGO_PORT: '27017',
         MONGO_DB_NAME: 'dishin_live',
@@ -13,7 +13,7 @@ const configs = function() {
       return {
         APP_URL: 'http://13.58.25.57:3001',
         API_URL: 'http://13.58.25.57:8282/api',
-        API_IMAGE_URL: 'http://13.58.25.57:8282',
+        API_IMAGE_URL: '13.58.25.57:8282',
         MONGO_HOST: 'localhost',
         MONGO_PORT: '28000',
         MONGO_DB_NAME: 'dishin',
