@@ -1,5 +1,4 @@
 const configs = function() {
-  console.log('EENNVV()' + process.env.NODE_ENV);
   switch (process.env.NODE_ENV) {
     case 'development':
       return {
@@ -23,9 +22,9 @@ const configs = function() {
 
     default:
       return {
-        APP_URL: 'http://ec2-13-58-25-57.us-east-2.compute.amazonaws.com',
-        API_URL: 'http://api.ec2-13-58-25-57.us-east-2.compute.amazonaws.com/api',
-        API_IMAGE_URL: 'http://api.ec2-13-58-25-57.us-east-2.compute.amazonaws.com',
+        APP_URL: 'http://localhost:3001',
+        API_URL: 'http://localhost:8282/api',
+        API_IMAGE_URL: 'localhost:8282',
         mongoURI:
           'mongodb+srv://dyne-admin:dadada123@dyne-0vicw.mongodb.net/dyne?retryWrites=true&w=majority',
         MONGO_HOST: 'localhost',
