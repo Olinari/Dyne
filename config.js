@@ -2,9 +2,9 @@ const configs = function() {
   switch (process.env.NODE_ENV) {
     case 'development':
       return {
-        APP_URL: 'http://dyne.menu',
-        API_URL: 'http://backend.dyne.menu/api',
-        API_IMAGE_URL: 'http://backend.dyne.menu',
+        APP_URL: 'http://localhost:3001',
+        API_URL: 'http://localhost:8282/api',
+        API_IMAGE_URL: 'http://localhost:8282',
         MONGO_HOST: 'localhost',
         MONGO_PORT: '27017',
         MONGO_DB_NAME: 'dishin_live',
@@ -22,9 +22,9 @@ const configs = function() {
 
     default:
       return {
-        APP_URL: 'http://localhost:3001',
-        API_URL: 'http://localhost:8282/api',
-        API_IMAGE_URL: 'http://localhost:8282',
+        APP_URL: 'http://ec2-13-58-25-57.us-east-2.compute.amazonaws.com',
+        API_URL: 'http://api.ec2-13-58-25-57.us-east-2.compute.amazonaws.com/api',
+        API_IMAGE_URL: 'http://api.ec2-13-58-25-57.us-east-2.compute.amazonaws.com',
         mongoURI:
           'mongodb+srv://dyne-admin:dadada123@dyne-0vicw.mongodb.net/dyne?retryWrites=true&w=majority',
         MONGO_HOST: 'localhost',
