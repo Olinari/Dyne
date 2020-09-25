@@ -9,17 +9,15 @@ const configs = function() {
         MONGO_PORT: '27017',
         MONGO_DB_NAME: 'dishin_live',
       };
-
-    /*    case 'production':
+    case 'production':
       return {
-        APP_URL: 'http://dyne.menu',
-        API_URL: 'http://backend.dyne.menu/api',
-        API_IMAGE_URL: 'http://backend.dyne.menu',
+        APP_URL: 'http://13.58.25.57:3001',
+        API_URL: 'http://13.58.25.57:8282/api',
+        API_IMAGE_URL: 'http://13.58.25.57:8282',
         MONGO_HOST: 'localhost',
         MONGO_PORT: '28000',
         MONGO_DB_NAME: 'dishin',
-      }; */
-
+      };
     default:
       return {
         APP_URL: 'http://localhost:3001',
