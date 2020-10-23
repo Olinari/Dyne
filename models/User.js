@@ -60,6 +60,7 @@ const userSchema = new Schema({
     required: true,
     default: new Date(),
   },
+  reviews: [{ type: Schema.Types.ObjectId, ref: 'Review', required: false }],
 });
 
 class UsersClass {

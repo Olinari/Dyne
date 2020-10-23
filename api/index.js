@@ -3,6 +3,7 @@ const publicRoute = require('./public');
 const restaurant = require('./restaurant');
 const role = require('./role');
 const tag = require('./tag');
+const review = require('./review');
 const dish = require('./dish');
 const search = require('./search');
 const systemReward = require('./systemReward');
@@ -37,6 +38,7 @@ const api = function(server) {
   server.use('/api/dishes', dish, handleError);
   server.use('/api/systemRewards', systemReward, handleError);
   server.use('/api/search', search, handleError);
+  server.use('/api/review', review, handleError);
 };
 
 module.exports = api;

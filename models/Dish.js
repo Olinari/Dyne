@@ -30,11 +30,11 @@ const dishSchema = new Schema({
   restaurant_id: {
     type: Schema.Types.ObjectId,
     ref: 'Restaurant',
-    require: false,
+    required: false,
   },
   wolt: {
     type: String,
-    require: false,
+    required: false,
   },
   tenbis: {
     type: String,

@@ -4,36 +4,27 @@ var mongoosePaginate = require('mongoose-paginate');
 var lastModified = require('./plugins/lastModified');
 
 const reviewSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  ratings: Number,
-  description: String,
+  userId: { type: Schema.Types.ObjectId, required: false, ref: 'User' },
+
   typeId: {
     type: Schema.Types.ObjectId,
-    required: true,
+    required: false,
     refPath: 'typeObject',
   },
-  typeObject: {
-    type: String,
-    required: true,
-    enum: ['Restaurant', 'Dish'],
+  dishId: {
+    type: Schema.Types.ObjectId,
+    required: false,
+    ref: 'Dish',
   },
-  valueForMoneyRatings: {
+  score: {
     type: Number,
     required: false,
   },
-  tasteRatings: {
-    type: Number,
-    required: false,
-  },
-  lookAndFeelRatings: {
-    type: Number,
-    required: false,
-  },
-  likes: {
+  reviewText: {
     type: String,
     required: false,
   },
-  dislikes: {
+  upvotes: {
     type: String,
     required: false,
   },
@@ -41,19 +32,15 @@ const reviewSchema = new Schema({
     type: Number,
     required: false,
   },
-  images: {
-    type: Schema.Types.ObjectId,
-    ref: 'Image',
-    require: false,
-  },
+
   createdAt: {
     type: Date,
-    required: true,
+    required: false,
     default: new Date(),
   },
   modifiedAt: {
     type: Date,
-    required: true,
+    required: false,
     default: new Date(),
   },
 });
