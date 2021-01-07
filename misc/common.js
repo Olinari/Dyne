@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { resultError } = require('../api/helper');
 const jwt = require('../misc/jwt_token');
 
